@@ -12,7 +12,7 @@ class Command(BaseCommand):
         for i in range(10):
             for j in range(3):
                 try:
-                    job_posting = JobPosting(company_id=companys[i],position=positions[j%3],
+                    job_posting = JobPosting(company=companys[i],position=positions[j%3],
                                                 compensation=compensations[j%3], content=contents[j%3],
                                                 skill=skills[j%3])
                     job_posting.save()

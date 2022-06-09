@@ -1,4 +1,3 @@
-from ast import Try
 from company.models import Company
 from django.core.management.base import BaseCommand
 

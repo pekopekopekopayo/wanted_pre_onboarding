@@ -3,5 +3,6 @@ from .views import JobPostView
 
 
 urlpatterns = [
-    path('job_posting/', JobPostView.as_view())
+    path('', JobPostView.as_view()),
+    path('search/', JobPostView.search)
 ]

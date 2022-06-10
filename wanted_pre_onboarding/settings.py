@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django_seed',
     'job_posting',
     'company',
+    'user',
 ]
 
 MIDDLEWARE = [

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'job_posting',
     'company',
     'user',
+    'job_application',
 ]
 
 MIDDLEWARE = [

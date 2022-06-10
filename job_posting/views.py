@@ -5,11 +5,12 @@ from rest_framework.response import Response
 
 from company.models import Company
 from .models import JobPosting
-from .serializers import JobPostingSerializer
+from .serializers import JobPostingDetailSerializer, JobPostingSerializer
 from rest_framework.decorators import api_view
 class JobPostView(APIView):
 
     def get(self, request, format=None):
+        print('여기임?')
         queryset = JobPosting.objects.all()
         serializer  = JobPostingSerializer(queryset, many=True)
         return Response(serializer.data) 
@@ -47,6 +48,17 @@ class JobPostView(APIView):
             j_p = JobPosting.objects.get(id=request.GET['id']) 
             j_p.delete()
             serializer  = JobPostingSerializer(JobPosting.objects.all(), many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except JobPosting.DoesNotExist as e:
+            return Response(e, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'error': '예상치 못한 에러'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @api_view(('GET',))
+    def detail(request, id):
+        try:
+            j_p = JobPosting.objects.get(id=id)
+            serializer = JobPostingDetailSerializer(j_p)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except JobPosting.DoesNotExist as e:
             return Response(e, status=status.HTTP_400_BAD_REQUEST)

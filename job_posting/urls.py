@@ -4,5 +4,6 @@ from .views import JobPostView
 
 urlpatterns = [
     path('', JobPostView.as_view()),
-    path('search/', JobPostView.search)
+    path('<int:id>/', JobPostView.detail),
+    path('search/', JobPostView.search),
 ]

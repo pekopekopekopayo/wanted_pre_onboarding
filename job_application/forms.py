@@ -7,3 +7,14 @@ class JobApplicationForm(forms.ModelForm):
     class Meta:
         model = JobApplication
         fields = '__all__'
+
+    def is_valid(self):
+        return super().is_valid() and self.is_unique(self.cleaned_data)
+
+    
+    def is_unique(self, data):
+        if JobApplication.objects.filter(user=data['user'], job_posting=data['job_posting']).first():
+            self.errors['many record'] = 'There is more than one record'
+            return False
+        return True
+        

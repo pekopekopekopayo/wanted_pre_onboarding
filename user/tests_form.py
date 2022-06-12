@@ -1,15 +1,16 @@
-from django.forms import ValidationError
 from django.test import TestCase
 
 from user.models import User
+from user.forms import UserForm
 
 # Create your tests here.
 
-class UserModelTest(TestCase):
+class UserFormTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        User.objects.create(name='이승수', address='울릉도 동남쪽', phone_number='01012345678')
+        user = UserForm({'name': '이승수', 'address': '울릉도 동남쪽', 'phone_number': '01012345678'})
+        user.save()
 
     def test_create_user(self):
         self.basic_success_case(name='일승수', address='울릉도 동남쪽', phone_number='010-1111-1111')
@@ -70,30 +71,22 @@ class UserModelTest(TestCase):
         self.basic_success_case(phone_number='01998765432')
 
 
-    def test_fullclean(self):
-        ''' full_clean을 실행하면 실행전에 phone_number 문자열에 "-"  문자를 삭제시켜준다. '''
-        user = User(name='일승수', address='울릉도 동남쪽', phone_number='010-1111-1111')
-        user.full_clean()
-        user.save()
-        if user.phone_number != '01011111111':
-            self.fail('제대로 되지 않은 핸드폰 번호입니다.')
+    def test_is_valid(self):
+        ''' is_valid 실행하면 실행전에 phone_number 문자열에 "-"  문자를 삭제시켜준다. '''
+        user_form = UserForm({'name': '일승수', 'address': '울릉도 동남쪽', 'phone_number': '010-1111-1111'})
+        if user_form.is_valid():
+            user = user_form.save(commit=False)
+            if user.phone_number != '01011111111':
+                self.fail('제대로 되지 않은 핸드폰 번호입니다.')
 
 
     def basic_success_case(self, name='일승수', address='울릉도 동남쪽', phone_number='010-1111-1111'):
-        user = User(name=name, address=address, phone_number=phone_number)
-        try:
-            user.full_clean()
-        except ValidationError as e:
-            self.fail(e)
-        except:
-            self.fail('의도치 못한 오류')
-
+        user_form = UserForm({'name': name, 'address': address, 'phone_number': phone_number})
+        if not user_form.is_valid():
+            self.fail(user_form.errors.as_data())
+        
     def basic_validate_case(self, name='일승수', address='울릉도 동남쪽', phone_number='010-1111-1111'):
-        user = User(name=name, address=address, phone_number=phone_number)
-        try:
-            user.full_clean()
-        except ValidationError:
-            return 
-        except:
-            self.fail('의도치 못한 오류')
-        self.fail('유저가 생성되었습니다')
+        user_form = UserForm({'name': name, 'address': address, 'phone_number': phone_number})
+        if user_form.is_valid():
+            self.fail('유효성 검사 성공')
+       

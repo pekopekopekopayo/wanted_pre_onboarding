@@ -1,10 +1,7 @@
-from django.forms import ValidationError
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from job_application.forms import JobApplicationForm
-from user.models import User
-from .models import JobApplication, JobPosting
 
 class JobApplicationView(APIView):
 

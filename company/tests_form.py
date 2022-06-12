@@ -9,8 +9,8 @@ class CompanyFormTest(TestCase):
     
     @classmethod
     def setUpTestData(cls):
-        user_form= CompanyForm({'name': '회사0', 'country': '한국', 'city': '서울'})
-        user_form.save()
+        company= CompanyForm({'name': '회사0', 'country': '한국', 'city': '서울'})
+        company.save()
         
     def test_create_company(self):
         self.basic_success_case(name='회사1', country='한국', city='서울')

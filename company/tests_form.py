@@ -2,14 +2,16 @@ from django.forms import ValidationError
 from django.test import TestCase
 
 from company.models import Company
+from company.forms import CompanyForm
 
 # Create your tests here.
-class CompanyModelTest(TestCase):
+class CompanyFormTest(TestCase):
     
     @classmethod
     def setUpTestData(cls):
-        Company.objects.create(name='회사0', country='한국', city='서울')
-    
+        user_form= CompanyForm({'name': '회사0', 'country': '한국', 'city': '서울'})
+        user_form.save()
+        
     def test_create_company(self):
         self.basic_success_case(name='회사1', country='한국', city='서울')
 
@@ -41,20 +43,11 @@ class CompanyModelTest(TestCase):
         self.basic_success_case(city='a'*50)
 
     def basic_success_case(self, name='회사1', country='한국', city='서울'):
-        company = Company(name=name, country=country, city=city)
-        try:
-            company.full_clean()
-        except ValidationError as e:
-            self.fail(e)
-        except:
-            self.fail('의도치 못한 오류')
+        company_form = CompanyForm({'name': name, 'country': country, 'city': city})
+        if not company_form.is_valid():
+            self.fail(company_form.errors.as_data())
 
     def basic_validate_case(self, name='회사1', country='한국', city='서울'):
-        company = Company(name=name, country=country, city=city)
-        try:
-            company.full_clean()
-        except ValidationError:
-            return
-        except:
-            self.fail('의도치 못한 오류')
-        self.fail('회사가 생성되었습니다.')
+        company_form = CompanyForm({'name': name, 'country': country, 'city': city})
+        if company_form.is_valid():
+            self.fail('유효성 검사 성공')

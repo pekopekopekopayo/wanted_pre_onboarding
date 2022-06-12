@@ -1,5 +1,6 @@
-from company.models import Company
 from django.core.management.base import BaseCommand
+
+from company.forms import CompanyForm
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
@@ -7,9 +8,9 @@ class Command(BaseCommand):
         random_city = ['서울', '도쿄', '워싱턴']
         
         for i in range(10):
-            try:
-                company = Company(name=f"회사{i}", country=random_country[i%3], city=random_city[i%3])
-                company.save()
-            except:
-                print('예상치 못한 오류가 발생되었습니다.')
-                break
+            company_form = CompanyForm({'name': f"회사{i}", 'country': random_country[i%3], 'city': random_city[i%3]})
+            if company_form.is_valid():
+                company_form.save()
+            else:
+                print(company_form.errors.as_data())
+                return

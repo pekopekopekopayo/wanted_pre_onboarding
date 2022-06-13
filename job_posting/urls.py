@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import JobPostView
+from .views import JobPostingView
 
 
 urlpatterns = [
-    path('', JobPostView.as_view()),
-    path('<int:id>/', JobPostView.detail),
-    path('search/', JobPostView.search),
+    path('', JobPostingView.as_view()),
+    path('<int:id>', JobPostingView.as_view()),
+    path('detail/<int:id>', JobPostingView.detail),
+    path('search/', JobPostingView.search),
 ]

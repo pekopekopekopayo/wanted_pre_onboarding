@@ -11,6 +11,13 @@ class JobPostingSerializer(serializers.ModelSerializer):
         model = JobPosting
         fields = ('id', 'company_name','company_country', 'company_city', 'position', 'compensation', 'skill')
 
+class JobPostingPutSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = JobPosting
+        fields = ('content', 'position', 'compensation', 'skill')
+
+
 class JobPostingDetailSerializer(serializers.ModelSerializer):
     company_name = serializers.StringRelatedField(source='company.name')
     company_country = serializers.StringRelatedField(source='company.country')

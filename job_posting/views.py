@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from job_posting.forms import JobPostingForm, JobPostingUpdateForm
 from .models import JobPosting
-from .serializers import JobPostingDetailSerializer, JobPostingSerializer
+from .serializers import JobPostingDetailSerializer, JobPostingSerializer, JobPostingPutSerializer
 from rest_framework.decorators import api_view
 
 class JobPostingView(APIView):
@@ -28,7 +28,7 @@ class JobPostingView(APIView):
         j_p_form = JobPostingUpdateForm(request.data, instance=j_p)
         if j_p_form.is_valid():
             j_p = j_p_form.save()
-            serializer = JobPostingSerializer(j_p)
+            serializer = JobPostingPutSerializer(j_p)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(j_p_form.errors.as_data(), status=status.HTTP_400_BAD_REQUEST)

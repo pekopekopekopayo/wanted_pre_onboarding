@@ -1,4 +1,3 @@
-from django.forms import ValidationError
 from django.test import TestCase
 
 from company.models import Company

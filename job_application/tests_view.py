@@ -1,8 +1,5 @@
 from django.test import RequestFactory, TestCase
 from company.forms import CompanyForm
-from company.models import Company
-
-from job_application.models import JobApplication
 from job_application.views import JobApplicationView
 from job_posting.forms import JobPostingForm
 from job_posting.models import JobPosting

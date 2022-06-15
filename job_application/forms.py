@@ -14,7 +14,7 @@ class JobApplicationForm(forms.ModelForm):
     
     def is_unique(self, data):
         if JobApplication.objects.filter(user=data['user'], job_posting=data['job_posting']).first():
-            self.add_error('job_posting', 'There is more than one record')
+            self.add_error('job_posting', 'user is more have than one record')
             return False
         return True
         

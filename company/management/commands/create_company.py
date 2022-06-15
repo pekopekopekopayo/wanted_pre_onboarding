@@ -13,4 +13,4 @@ class Command(BaseCommand):
                 company_form.save()
             else:
                 print(company_form.errors.as_data())
-                return
+                break

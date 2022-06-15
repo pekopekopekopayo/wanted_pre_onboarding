@@ -37,39 +37,29 @@ class JobApplicationFormTest(TestCase):
     def test_create_job_application(self):
         self.basic_success_case(user=User.objects.first(), job_posting=JobPosting.objects.first())
 
-    def test_user_job_posting_relation(self):
+    def test_is_unique(self): 
         user = User.objects.first()
         j_p1, j_p2 = JobPosting.objects.all()[:2]
-
-        '''한 유저가 한 채용공고 지원 '''
         self.basic_success_case(user=user, job_posting=j_p1, save=True)
-
-        '''한 유저가 똑같은 채용공고 지원 '''
         self.basic_validate_case(user=user, job_posting=j_p1)
-
-        '''똑같은 회사에 다른 채용공고 지원 가능'''
         self.basic_success_case(user=user, job_posting=j_p2)
-
         another_user = UserForm({'name': '이승수', 'address': '울릉도 동남쪽', 'phone_number': '01012345677'}).save()
-
-        '''다른사람 지원'''
         self.basic_success_case(user=another_user, job_posting=j_p1)
 
     def test_on_delete_user(self):
-        
         user = User.objects.first()
         j_a = user.job_applications.first()
         user.delete()
         if JobApplication.objects.filter(id=j_a.id).first():
-            self.fail('유저가 삭재되었지만 지원정보가 존재합니다')
+            self.fail('유저가 삭제되었지만 지원정보가 존재합니다')
 
-    def test_on_delete_user(self):        
+    def test_on_delete_job_posting(self):        
         user = User.objects.first()
         j_a = user.job_applications.first()
-        user.delete()
+        j_p = j_a.job_posting
+        j_p.delete()
         if JobApplication.objects.filter(id=j_a.id).first():
-            self.fail('유저가 삭재되었지만 지원정보가 존재합니다')
-
+            self.fail('채용공고가 삭제되었지만 지원정보가 존재합니다')
 
     def basic_success_case(self, user=User.objects.first(), job_posting=JobPosting.objects.first(), save=False):
         j_a = JobApplicationForm({'user':user, 'job_posting': job_posting})

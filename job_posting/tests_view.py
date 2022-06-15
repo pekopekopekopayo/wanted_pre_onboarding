@@ -1,4 +1,3 @@
-import keyword
 from django.test import RequestFactory, TestCase
 from company.forms import CompanyForm
 from company.models import Company
@@ -90,15 +89,18 @@ class JobApplicationAPIViewTests(TestCase):
         j_p = JobPostingForm({'company': Company.objects.first().id, 'position': 'back end', 'content': '복지가...', 'compensation': 300, 'skill': 'py'}).save()
         factory = RequestFactory()
         view = JobPostingView.as_view()
-        url = f"http://127.0.0.1:8000/job_posting/"
-        request = factory.delete(url)
-        response = view(request, j_p.id)      
+        url = f"http://127.0.0.1:8000/job_posting"
+        request = factory.delete(url, data={'id': j_p.id}, content_type='application/json')
+        response = view(request)      
+        
         if response.status_code != 200:
             self.fail('삭제가 되지 않았습니다.')
-        if JobPosting.objects.filter(id=j_p.id).first():
+        if JobPosting.objects.filter(id=j_p.id).first() != None:
             self.fail('삭제가 되지 않았습니다.')
         
-        response = view(request, j_p.id)
+        request = factory.delete(url, data={'id': j_p.id}, content_type='application/json')
+        response = view(request)
+        
         if response.status_code != 400:
             self.fail('객체는 이미 삭제되었습니다.')
         
@@ -106,7 +108,7 @@ class JobApplicationAPIViewTests(TestCase):
         j_p = JobPostingForm({'company': Company.objects.first().id, 'position': 'back end', 'content': '테스트성공...', 'compensation': 300, 'skill': 'py'}).save()
         factory = RequestFactory()
         view = JobPostingView.detail
-        url = f"http://127.0.0.1:8000/job_posting/detail/"
+        url = f"http://127.0.0.1:8000/job_posting/detail"
         request = factory.get(url)
         response = view(request, j_p.id)      
         if response.status_code != 200:
@@ -118,7 +120,7 @@ class JobApplicationAPIViewTests(TestCase):
     def test_search_api(self):
         factory = RequestFactory()
         view = JobPostingView.search
-        url = f"http://127.0.0.1:8000/job_posting/search/"
+        url = f"http://127.0.0.1:8000/job_posting/search"
         request = factory.get(url, data={'position': 'back end', 'skill': 'py'})
         response = view(request)
         for data in response.data:
